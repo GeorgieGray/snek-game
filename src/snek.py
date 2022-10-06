@@ -1,5 +1,5 @@
-import util
-from direction import Direction
+import src.util as util
+from src.direction import Direction
 
 class SnekNode():
     def __init__(self, coordinate, neighbour = None):
@@ -14,9 +14,9 @@ class Snek():
         self.direction = Direction.RIGHT
 
     def __create(self):
-        tail = SnekNode((15, 13))
-        body = SnekNode((15, 14), tail)
-        head = SnekNode((15, 15), body)
+        tail = SnekNode((11, 7))
+        body = SnekNode((11, 8), tail)
+        head = SnekNode((11, 9), body)
 
         return [head, body, tail]
 
@@ -29,7 +29,7 @@ class Snek():
 
     def __handle_input(self):
         key = self.world.screen.getch()
-        if util.is_valid_input(key):
+        if util.is_valid_input(key, self.direction):
             self.direction = key
 
     def __move(self):
