@@ -107,7 +107,7 @@ class World():
         return "".join(arr)
 
     def render(self):
-        self.screen.clear()
+        self.screen.erase()
         score_line = self.add_score_to_line(self.line)
 
         if self.game_over:
