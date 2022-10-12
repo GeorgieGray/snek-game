@@ -198,8 +198,14 @@ class World():
             self.draw_line(i + 1, "|" + current + "|")
         
         empty_line = ['   '] * self.size
-        self.draw_line(14, "|" + util.center_text(empty_line, "Enter a username:"))
-        self.draw_line(16, "|" + util.center_text(empty_line, "".join(self.player_name_input)))
+        self.draw_line(14, "|" + util.center_text(empty_line, " Enter a username:"))
+
+        username = "".join(self.player_name_input)
+        username_is_even = len(self.player_name_input) % 2 == 0
+        if not username_is_even:
+            username = username + " "
+
+        self.draw_line(16, "|" + util.center_text(empty_line, username))
         self.draw_line(len(self.grid) + 1, self.line)
 
     def render(self):

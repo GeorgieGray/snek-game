@@ -13,6 +13,9 @@ def start_game():
             world.render()
             key = world.screen.getch()
             input_size = len(world.player_name_input)
+
+            if key == Choice.QUIT:
+                break
             
             if key == Choice.START:
                 if len(world.player_name_input) < 3:
