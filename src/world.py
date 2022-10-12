@@ -1,6 +1,5 @@
 import curses
 import functools
-from turtle import title
 import src.util as util
 import random
 from src.snek import SnekNode
