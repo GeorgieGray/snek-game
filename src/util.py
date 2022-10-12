@@ -44,7 +44,7 @@ def center_text(string, text):
     
 
     middle = math.floor(width / 2)
-    start = middle - math.floor(text_width / 2)
+    start = middle - math.ceil(text_width / 2)
 
     for i in range(text_width):
         out[i + start] = text_arr[i]

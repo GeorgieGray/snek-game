@@ -1,5 +1,6 @@
 import curses
 import functools
+from turtle import title
 import src.util as util
 import random
 from src.snek import SnekNode
@@ -28,6 +29,7 @@ class World():
         self.screen = curses.initscr()
         self.size = 22
         self.grid = [None] * self.size
+        self.playing = False
         self.game_over = False
         self.nom_coordinate = None
         self.line = create_line(self.size)
@@ -55,7 +57,7 @@ class World():
         needs_nom = True if self.nom_coordinate == None else False
 
         for i, node in enumerate(snek.nodes):
-            if self.game_over == True:
+            if self.game_over == True or self.playing == False:
                 return
             
             (x, y) = node.coordinate
@@ -106,35 +108,81 @@ class World():
 
         return "".join(arr)
 
+    def render_game_over(self, score_line):
+        self.screen.addstr(0, 0, self.line)
+
+        for i in range(len(self.grid)):
+            current = "".join(['   '] * len(self.grid))
+            self.screen.addstr(i + 1, 0, "|" + current + "|")
+
+        empty_line = ['   '] * self.size
+        game_over = util.center_text(empty_line, "GAME OVER")
+        play_again = util.center_text(empty_line, "Play again?")
+        yes = util.center_text(empty_line, "Yes (y)")
+        no = util.center_text(empty_line, " No (n)")
+        self.screen.addstr(8, 0, "|" + game_over)
+        self.screen.addstr(10, 0, "|" + play_again)
+        self.screen.addstr(12, 0, "|" + yes)
+        self.screen.addstr(13, 0, "|" + no)
+
+        self.screen.addstr(len(self.grid) + 1, 0, score_line)
+
+    def render_home(self):
+        self.screen.addstr(0, 0, self.line)
+
+        for i in range(len(self.grid)):
+            current = "".join(['   '] * len(self.grid))
+            self.screen.addstr(i + 1, 0, "|" + current + "|")
+
+        empty_line = ['   '] * self.size
+        title = [
+            " #### #   # #### #   #",
+            " #    ##  # #    #  # ",
+            " #### # # # #### ###  ",
+            "    # #  ## #    #  # ",
+            " #### #   # #### #   #"
+        ]
+
+        for i, title_line in enumerate(title):
+            centered_title_line = util.center_text(empty_line, title_line)
+            self.screen.addstr(4 + i, 0, "|" + centered_title_line)
+
+        controls = util.center_text(empty_line, " Controls - WASD")
+        up = util.center_text(empty_line, "Up (W)")
+        left = util.center_text(empty_line, "Left (A)")
+        down = util.center_text(empty_line, "Down (S)")
+        right = util.center_text(empty_line, " Right (D)")
+        start = util.center_text(empty_line, "Press (ENTER) to start")
+        quit = util.center_text(empty_line, " Press (ESC) to quit")
+
+        self.screen.addstr(10, 0, "|" + controls)
+        self.screen.addstr(11, 0, "|" + up)
+        self.screen.addstr(12, 0, "|" + left)
+        self.screen.addstr(13, 0, "|" + down)
+        self.screen.addstr(14, 0, "|" + right)
+
+        self.screen.addstr(16, 0, "|" + start)
+        self.screen.addstr(17, 0, "|" + quit)
+
+        self.screen.addstr(len(self.grid) + 1, 0, self.line)
+
     def render(self):
         self.screen.erase()
-        score_line = self.add_score_to_line(self.line)
 
-        if self.game_over:
-            self.screen.addstr(0, 0, self.line)
+        if self.playing:
+            score_line = self.add_score_to_line(self.line)
+            if self.game_over:
+                self.render_game_over(score_line)
+            else:
+                self.screen.addstr(0, 0, self.line)
 
-            for i in range(len(self.grid)):
-                current = "".join(['   '] * len(self.grid))
-                self.screen.addstr(i + 1, 0, "|" + current + "|")
+                for i, row in enumerate(self.grid):
+                    current = functools.reduce(concat, row, '')
+                    self.screen.addstr(i + 1, 0, "|" + current + "|")
 
-            empty_line = ['   '] * self.size
-            game_over = util.center_text(empty_line, "GAME OVER")
-            play_again = util.center_text(empty_line, "Play again?")
-            yes = util.center_text(empty_line, "Yes (y)")
-            no = util.center_text(empty_line, " No (n)")
-            self.screen.addstr(8, 0, "|" + game_over)
-            self.screen.addstr(10, 0, "|" + play_again)
-            self.screen.addstr(12, 0, "|" + yes)
-            self.screen.addstr(13, 0, "|" + no)
-
-            self.screen.addstr(len(self.grid) + 1, 0, score_line)
+                self.screen.addstr(len(self.grid) + 1, 0, score_line)
         else:
-            self.screen.addstr(0, 0, self.line)
-
-            for i, row in enumerate(self.grid):
-                current = functools.reduce(concat, row, '')
-                self.screen.addstr(i + 1, 0, "|" + current + "|")
-
-            self.screen.addstr(len(self.grid) + 1, 0, score_line)
+            self.render_home()
+        
         
         self.screen.refresh()
