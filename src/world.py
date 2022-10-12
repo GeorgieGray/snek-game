@@ -107,31 +107,36 @@ class World():
 
         return "".join(arr)
 
+    def draw_line(self, index, text):
+        whitespace = 12
+        padding = int(whitespace / 2)
+        self.screen.addstr(6 + index, padding, text)
+
     def render_game_over(self, score_line):
-        self.screen.addstr(0, 0, self.line)
+        self.draw_line(0, self.line)
 
         for i in range(len(self.grid)):
             current = "".join(['   '] * len(self.grid))
-            self.screen.addstr(i + 1, 0, "|" + current + "|")
+            self.draw_line(i + 1, "|" + current + "|")
 
         empty_line = ['   '] * self.size
         game_over = util.center_text(empty_line, "GAME OVER")
         play_again = util.center_text(empty_line, "Play again?")
         yes = util.center_text(empty_line, "Yes (y)")
         no = util.center_text(empty_line, " No (n)")
-        self.screen.addstr(8, 0, "|" + game_over)
-        self.screen.addstr(10, 0, "|" + play_again)
-        self.screen.addstr(12, 0, "|" + yes)
-        self.screen.addstr(13, 0, "|" + no)
+        self.draw_line(8, "|" + game_over)
+        self.draw_line(10, "|" + play_again)
+        self.draw_line(12, "|" + yes)
+        self.draw_line(13, "|" + no)
 
-        self.screen.addstr(len(self.grid) + 1, 0, score_line)
+        self.draw_line(len(self.grid) + 1, score_line)
 
     def render_home(self):
-        self.screen.addstr(0, 0, self.line)
+        self.draw_line(0, self.line)
 
         for i in range(len(self.grid)):
             current = "".join(['   '] * len(self.grid))
-            self.screen.addstr(i + 1, 0, "|" + current + "|")
+            self.draw_line(i + 1, "|" + current + "|")
 
         empty_line = ['   '] * self.size
         title = [
@@ -144,7 +149,7 @@ class World():
 
         for i, title_line in enumerate(title):
             centered_title_line = util.center_text(empty_line, title_line)
-            self.screen.addstr(4 + i, 0, "|" + centered_title_line)
+            self.draw_line(4 + i, "|" + centered_title_line)
 
         controls = util.center_text(empty_line, " Controls - WASD")
         up = util.center_text(empty_line, "Up (W)")
@@ -154,16 +159,16 @@ class World():
         start = util.center_text(empty_line, "Press (ENTER) to start")
         quit = util.center_text(empty_line, " Press (ESC) to quit")
 
-        self.screen.addstr(10, 0, "|" + controls)
-        self.screen.addstr(11, 0, "|" + up)
-        self.screen.addstr(12, 0, "|" + left)
-        self.screen.addstr(13, 0, "|" + down)
-        self.screen.addstr(14, 0, "|" + right)
+        self.draw_line(10, "|" + controls)
+        self.draw_line(11, "|" + up)
+        self.draw_line(12, "|" + left)
+        self.draw_line(13, "|" + down)
+        self.draw_line(14, "|" + right)
 
-        self.screen.addstr(16, 0, "|" + start)
-        self.screen.addstr(17, 0, "|" + quit)
+        self.draw_line(16, "|" + start)
+        self.draw_line(17, "|" + quit)
 
-        self.screen.addstr(len(self.grid) + 1, 0, self.line)
+        self.draw_line(len(self.grid) + 1, self.line)
 
     def render(self):
         self.screen.erase()
@@ -173,13 +178,13 @@ class World():
             if self.game_over:
                 self.render_game_over(score_line)
             else:
-                self.screen.addstr(0, 0, self.line)
+                self.draw_line(0, self.line)
 
                 for i, row in enumerate(self.grid):
                     current = functools.reduce(concat, row, '')
-                    self.screen.addstr(i + 1, 0, "|" + current + "|")
+                    self.draw_line(i + 1, "|" + current + "|")
 
-                self.screen.addstr(len(self.grid) + 1, 0, score_line)
+                self.draw_line(len(self.grid) + 1, score_line)
         else:
             self.render_home()
         
