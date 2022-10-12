@@ -180,13 +180,13 @@ class World():
         quit = util.center_text(empty_line, " Press (ESC) to quit")
 
         self.draw_line(10, "|" + controls)
-        self.draw_line(11, "|" + up)
-        self.draw_line(12, "|" + left)
-        self.draw_line(13, "|" + down)
-        self.draw_line(14, "|" + right)
+        self.draw_line(12, "|" + up)
+        self.draw_line(13, "|" + left)
+        self.draw_line(14, "|" + down)
+        self.draw_line(15, "|" + right)
 
-        self.draw_line(16, "|" + start)
-        self.draw_line(17, "|" + quit)
+        self.draw_line(17, "|" + start)
+        self.draw_line(18, "|" + quit)
 
         self.draw_line(len(self.grid) + 1, self.line)
 
