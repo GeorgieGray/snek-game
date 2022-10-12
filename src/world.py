@@ -110,7 +110,7 @@ class World():
     def draw_line(self, index, text):
         whitespace = 12
         padding = int(whitespace / 2)
-        self.screen.addstr(6 + index, padding, text)
+        self.screen.addstr(index, padding, text)
 
     def render_game_over(self, score_line):
         self.draw_line(0, self.line)
