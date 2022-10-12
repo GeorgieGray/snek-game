@@ -24,7 +24,7 @@ def create_line(length):
     return "".join(line_segments)
 
 class World():
-    def __init__(self):
+    def __init__(self, player = None):
         self.screen = curses.initscr()
         self.size = 22
         self.grid = [None] * self.size
@@ -33,6 +33,8 @@ class World():
         self.nom_coordinate = None
         self.line = create_line(self.size)
         self.score = 0
+        self.player = player
+        self.player_name_input = []
 
     def reset(self):
         for x in range(0, self.size):
@@ -88,22 +90,36 @@ class World():
         self.reset()
         self.render_nom()
 
-    def add_score_to_line(self, line):
-        arr = list(line)
-        arr[2] = ' '
-        arr[3] = 'S'
-        arr[4] = 'C'
-        arr[5] = 'O'
-        arr[6] = 'R'
-        arr[7] = 'E'
-        arr[8] = ' '
+    def get_player_line(self):
+        arr = list(self.line)
+        name = list(self.player.strip())
+        player = list(' PLAYER: ')
+        playerLength = len(player) + 2
+
+        for i, char in enumerate(player):
+            arr[i + 2] = char
+
+        for i, char in enumerate(name):
+            arr[i + playerLength] = char
+
+        arr[playerLength + len(name)] = ' '
+
+        return "".join(arr)
+
+    def get_score_line(self):
+        arr = list(self.line)
+        score = list(' SCORE: ')
+        scoreLength = len(score) + 2
+        
+        for i, char in enumerate(score):
+            arr[i + 2] = char
 
         score = list(str(self.score))
 
         for i, digit in enumerate(score):
-            arr[9 + i] = digit
+            arr[scoreLength + i] = digit
         
-        arr[9 + len(score)] = ' '
+        arr[scoreLength + len(score)] = ' '
 
         return "".join(arr)
 
@@ -112,8 +128,11 @@ class World():
         padding = int(whitespace / 2)
         self.screen.addstr(index, padding, text)
 
-    def render_game_over(self, score_line):
-        self.draw_line(0, self.line)
+    def render_game_over(self):
+        player_line = self.get_player_line()
+        score_line = self.get_score_line()
+
+        self.draw_line(0, player_line)
 
         for i in range(len(self.grid)):
             current = "".join(['   '] * len(self.grid))
@@ -132,7 +151,8 @@ class World():
         self.draw_line(len(self.grid) + 1, score_line)
 
     def render_home(self):
-        self.draw_line(0, self.line)
+        player_line = self.get_player_line()
+        self.draw_line(0, player_line)
 
         for i in range(len(self.grid)):
             current = "".join(['   '] * len(self.grid))
@@ -170,23 +190,37 @@ class World():
 
         self.draw_line(len(self.grid) + 1, self.line)
 
+    def render_name_input(self):
+        self.draw_line(0, self.line)
+
+        for i in range(len(self.grid)):
+            current = "".join(['   '] * len(self.grid))
+            self.draw_line(i + 1, "|" + current + "|")
+        
+        empty_line = ['   '] * self.size
+        self.draw_line(14, "|" + util.center_text(empty_line, "What is your name?"))
+        self.draw_line(16, "|" + util.center_text(empty_line, "".join(self.player_name_input)))
+        self.draw_line(len(self.grid) + 1, self.line)
+
     def render(self):
-        self.screen.erase()
-
-        if self.playing:
-            score_line = self.add_score_to_line(self.line)
-            if self.game_over:
-                self.render_game_over(score_line)
-            else:
-                self.draw_line(0, self.line)
-
-                for i, row in enumerate(self.grid):
-                    current = functools.reduce(concat, row, '')
-                    self.draw_line(i + 1, "|" + current + "|")
-
-                self.draw_line(len(self.grid) + 1, score_line)
+        if self.player == None:
+            self.render_name_input()
         else:
-            self.render_home()
-        
-        
+            self.screen.erase()
+
+            if self.playing:
+                if self.game_over:
+                    self.render_game_over()
+                else:
+                    self.draw_line(0, self.get_player_line())
+
+                    for i, row in enumerate(self.grid):
+                        current = functools.reduce(concat, row, '')
+                        self.draw_line(i + 1, "|" + current + "|")
+
+                    self.draw_line(len(self.grid) + 1, self.get_score_line())
+            else:
+                self.render_home()
+            
         self.screen.refresh()
+        
