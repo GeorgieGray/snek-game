@@ -15,7 +15,9 @@ def start_game():
             input_size = len(world.player_name_input)
 
             if key == Choice.QUIT:
-                break
+                world = World()
+                snek = Snek(world)
+                continue
             
             if key == Choice.START:
                 if len(world.player_name_input) < 3:
@@ -38,7 +40,8 @@ def start_game():
             if key == Choice.START:
                 world.playing = True
             elif key == Choice.QUIT:
-                break
+                world = World()
+                snek = Snek(world)
 
             continue
 
