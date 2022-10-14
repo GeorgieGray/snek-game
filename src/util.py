@@ -1,6 +1,7 @@
 from src.direction import Direction
 import math
 
+
 def is_valid_input(key, direction):
     valid = [Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN]
 
@@ -20,6 +21,7 @@ def is_valid_input(key, direction):
     else:
         return False
 
+
 def get_next_coordinate(direction, head):
     (x, y) = head.coordinate
 
@@ -35,13 +37,13 @@ def get_next_coordinate(direction, head):
         case _:
             return None
 
+
 def center_text(string, text):
     text_arr = list(text)
     out = list(string)
 
     width = len(out)
     text_width = len(text_arr)
-    
 
     middle = math.floor(width / 2)
     start = middle - math.ceil(text_width / 2)
@@ -52,5 +54,3 @@ def center_text(string, text):
     prefix = "".join([' '] * text_width)
 
     return prefix + "".join(out)
-        
-

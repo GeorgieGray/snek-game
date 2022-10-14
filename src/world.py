@@ -5,26 +5,30 @@ import random
 from src.snek import SnekNode
 from src.nom import Nom
 
+
 class Character():
     SNEK = ' O '
     NOM = ' X '
 
+
 def concat(a, b):
-    if b == None:
+    if b is None:
         char = '   '
         return a + char
 
     character = Character.SNEK if isinstance(b, SnekNode) else Character.NOM
     return a + character
 
+
 def create_line(length):
     line_segments = ['---'] * length
     line_segments[0] = '+--'
-    line_segments[len(line_segments) - 1] =  '----+'
+    line_segments[len(line_segments) - 1] = '----+'
     return "".join(line_segments)
 
+
 class World():
-    def __init__(self, player = None):
+    def __init__(self, player=None):
         self.screen = curses.initscr()
         self.size = 22
         self.grid = [None] * self.size
@@ -42,7 +46,7 @@ class World():
                 if not self.grid[x]:
                     self.grid[x] = [None] * self.size
                 self.grid[x][y] = None
-    
+
     def create_nom(self):
         non_snake_coordinates = []
 
@@ -50,23 +54,23 @@ class World():
             for y in range(0, self.size):
                 if not isinstance(self.grid[x][y], SnekNode):
                     non_snake_coordinates.append((x, y))
-        
+
         (x, y) = random.choice(non_snake_coordinates)
         self.nom_coordinate = (x, y)
 
     def render_snek(self, snek):
-        needs_nom = True if self.nom_coordinate == None else False
+        needs_nom = True if self.nom_coordinate is None else False
 
         for i, node in enumerate(snek.nodes):
-            if self.game_over == True or self.playing == False:
+            if self.game_over is True or self.playing is False:
                 return
-            
+
             (x, y) = node.coordinate
 
             if x > (self.size - 1) or x < 0 or y > (self.size - 1) or y < 0:
                 self.game_over = True
                 return
-            
+
             is_head = i == 0
             if is_head and isinstance(self.grid[x][y], Nom):
                 snek.grow()
@@ -74,12 +78,12 @@ class World():
                 needs_nom = True
 
             self.grid[x][y] = node
-        
+
         if needs_nom:
             self.create_nom()
 
     def render_nom(self):
-        if self.nom_coordinate == None:
+        if self.nom_coordinate is None:
             return
 
         (x, y) = self.nom_coordinate
@@ -110,7 +114,7 @@ class World():
         arr = list(self.line)
         score = list(' SCORE: ')
         scoreLength = len(score) + 2
-        
+
         for i, char in enumerate(score):
             arr[i + 2] = char
 
@@ -118,7 +122,7 @@ class World():
 
         for i, digit in enumerate(score):
             arr[scoreLength + i] = digit
-        
+
         arr[scoreLength + len(score)] = ' '
 
         return "".join(arr)
@@ -196,9 +200,10 @@ class World():
         for i in range(len(self.grid)):
             current = "".join(['   '] * len(self.grid))
             self.draw_line(i + 1, "|" + current + "|")
-        
+
         empty_line = ['   '] * self.size
-        self.draw_line(14, "|" + util.center_text(empty_line, " Enter a username:"))
+        prompt = util.center_text(empty_line, " Enter a username:")
+        self.draw_line(14, "|" + prompt)
 
         username = "".join(self.player_name_input)
         username_is_even = len(self.player_name_input) % 2 == 0
@@ -209,7 +214,7 @@ class World():
         self.draw_line(len(self.grid) + 1, self.line)
 
     def render(self):
-        if self.player == None:
+        if self.player is None:
             self.render_name_input()
         else:
             self.screen.erase()
@@ -227,6 +232,5 @@ class World():
                     self.draw_line(len(self.grid) + 1, self.get_score_line())
             else:
                 self.render_home()
-            
+
         self.screen.refresh()
-        

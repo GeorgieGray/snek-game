@@ -1,11 +1,13 @@
 import src.util as util
 from src.direction import Direction
 
+
 class SnekNode():
-    def __init__(self, coordinate, neighbour = None):
+    def __init__(self, coordinate, neighbour=None):
         self.coordinate = coordinate
         self.previous_coordinate = None
         self.neighbour = neighbour
+
 
 class Snek():
     def __init__(self, world):
@@ -35,15 +37,15 @@ class Snek():
     def __move(self):
         head = self.nodes[0]
         next_coordinate = util.get_next_coordinate(self.direction, head)
-        if (next_coordinate == None):
+        if (next_coordinate is None):
             return
 
         previous_coordinate = head.coordinate
         head.previous_coordinate = previous_coordinate
         head.coordinate = next_coordinate
         current_part = head.neighbour
-        
-        while(current_part != None):
+
+        while (current_part is not None):
             (x, y) = previous_coordinate
             previous_coordinate = current_part.coordinate
             current_part.previous_coordinate = previous_coordinate

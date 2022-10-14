@@ -3,13 +3,14 @@ from curses import ascii
 from src.choice import Choice
 from src.snek import Snek
 from src.world import World
-    
+
+
 def start_game():
     world = World()
     snek = Snek(world)
 
-    while(True):
-        if world.player == None:
+    while (True):
+        if world.player is None:
             world.render()
             key = world.screen.getch()
             input_size = len(world.player_name_input)
@@ -18,11 +19,11 @@ def start_game():
                 world = World()
                 snek = Snek(world)
                 continue
-            
+
             if key == Choice.START:
                 if len(world.player_name_input) < 3:
                     continue
-                
+
                 world.player = "".join(world.player_name_input)
                 continue
 
@@ -34,7 +35,7 @@ def start_game():
 
             continue
 
-        if world.playing == False:
+        if world.playing is False:
             world.render()
             key = world.screen.getch()
             if key == Choice.START:
@@ -59,6 +60,5 @@ def start_game():
         world.cycle()
         snek.cycle()
         world.render()
-        
+
         time.sleep(.11)
-    
